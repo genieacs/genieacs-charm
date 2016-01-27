@@ -1,3 +1,26 @@
-#!/usr/bin/python
-import services
-services.manage()
+#!/bin/bash
+
+set -e
+
+if [ -n "$GENIEACS_MONGODB_CONNECTION_URL" ]; then
+    sed -i '/MONGODB_CONNECTION_URL/c\  "MONGODB_CONNECTION_URL" : "'$GENIEACS_MONGODB_CONNECTION_URL'",' /opt/genieacs/config/config.json
+fi
+
+if [ -n "$GENIEACS_REDIS_HOST" ]; then
+    sed -i '/REDIS_PORT/c\  "REDIS_PORT" : '$GENIEACS_REDIS_PORT',' /opt/genieacs/config/config.json
+    sed -i '/REDIS_HOST/c\  "REDIS_HOST" : "'$GENIEACS_REDIS_HOST'",' /opt/genieacs/config/config.json
+fi
+
+mongodb_default_url=`grep "mongodb://127.0.0.1/genieacs" /opt/genieacs/config/config.json` || true
+redis_default_host=`grep "REDIS_HOST.*127.0.0.1" /opt/genieacs/config/config.json` || true
+
+if [ -z "$mongodb_default_url" ] && [ -z "$redis_default_host" ]; then
+    juju-log "Running Genieacs"
+    service genieacs-cwmp restart || service genieacs-cwmp start
+    service genieacs-fs restart || service genieacs-fs start
+    service genieacs-nbi restart || service genieacs-nbi start
+    open-port 7547
+    open-port 7557
+    open-port 7567
+    status-set active
+fi

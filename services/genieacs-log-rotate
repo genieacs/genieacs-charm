@@ -1,0 +1,8 @@
+/var/log/genieacs/*.log {
+        daily
+        missingok
+        copytruncate
+        rotate 30
+        compress
+        dateext
+}

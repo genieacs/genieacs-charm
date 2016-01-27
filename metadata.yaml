@@ -1,19 +1,15 @@
-name: genie
-summary: <Fill in summary here>
-maintainer: shweelan <shweelan@ubuntu-512mb-fra1-01>
+name: genieacs
+summary: TR-69 CPE remote management tool
+maintainer: shweelan <shweelan@genieacs.com>
 description: |
-  <Multi-line description here>
+  TR-69 CPE remote management tool
 tags:
-  # Replace "misc" with one or more whitelisted tags from this list:
-  # https://jujucharms.com/docs/stable/authors-charm-metadata
-  - misc
-subordinate: false
+  - monitoring
 provides:
-  provides-relation:
-    interface: interface-name
+  genieacs:
+    interface: genieacs
 requires:
-  requires-relation:
-    interface: interface-name
-peers:
-  peer-relation:
-    interface: interface-name
+  database:
+    interface: mongodb
+  cache:
+    interface: redis

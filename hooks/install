@@ -1,17 +1,39 @@
-#!/usr/bin/python
+#!/bin/bash
 
-import setup
-setup.pre_install()
+set -e
 
-from charmhelpers.core import hookenv
+# Install NodeJS
+juju-log "Fetching and installing NodeJS"
+status-set maintenance "Fetching and installing NodeJS"
+curl -sL https://deb.nodesource.com/setup_0.10 | bash -
+apt-get install -y nodejs
+juju-log "Finished fetching and installing NodeJS"
 
+# Install GenieACS
+status-set maintenance "Fetching and installing GenieACS"
+juju-log "Fetching and installing GenieACS"
+apt-get install -y git build-essential
+repo=`config-get repo`
+branch=`config-get branch`
+rm -rf /opt/genieacs/
+git clone "$repo" /opt/genieacs -b "$branch"
+cd /opt/genieacs
+export HOME=/tmp
+npm install
+npm run configure
+npm run compile
 
-def install():
-    hookenv.log('Installing genie')
-    # add steps for installing dependencies and packages here
-    # e.g.: from charmhelpers import fetch
-    #       fetch.apt_install(fetch.filter_installed_packages(['nginx']))
+juju-log "Preparing GenieACS services"
+mkdir -p /var/log/genieacs
+apt-get install -y logrotate
+cp "$CHARM_DIR/services/genieacs-log-rotate" "/etc/logrotate.d/genieacs"
+git apply "$CHARM_DIR/services/add_title_to_genieacs_services.diff"
+cp "$CHARM_DIR/services/genieacs-cwmp" "/etc/init.d/genieacs-cwmp"
+cp "$CHARM_DIR/services/genieacs-nbi" "/etc/init.d/genieacs-nbi"
+cp "$CHARM_DIR/services/genieacs-fs" "/etc/init.d/genieacs-fs"
 
+cd "$CHARM_DIR"
+apt-get autoremove -y
+juju-log "Finished fetching and installing GenieACS"
 
-if __name__ == "__main__":
-    install()
+status-set waiting "GenieACS is waiting for MongoDB and Redis relations"

@@ -1,14 +1,25 @@
 options:
-  string-option:
+  repo:
     type: string
-    default: "Default Value"
-    description: "A short description of the configuration option"
-  boolean-option:
-    type: boolean
-    default: False
-    description: "A short description of the configuration option"
-  int-option:
-    type: int
-    default: 9001
-    description: "A short description of the configuration option"
-
+    default: https://github.com/zaidka/genieacs.git
+    description: "GenieACS source code repository"
+  branch:
+    type: string
+    default: master
+    description: "GenieACS repository deployment branch"
+  mongodb_host:
+    type: string
+    default: ""
+    description: "MongoDB database host instead of using: `juju deploy mongodb` locally"
+  mongodb_port:
+    type: string
+    default: "27017"
+    description: "MongoDB database port"
+  redis_host:
+    type: string
+    default: ""
+    description: "Redis cache host instead of using: `juju deploy redis` locally"
+  redis_port:
+    type: string
+    default: "6379"
+    description: "Redis cache port"
