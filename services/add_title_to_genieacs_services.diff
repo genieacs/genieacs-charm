@@ -1,0 +1,36 @@
+diff --git a/bin/genieacs-cwmp b/bin/genieacs-cwmp
+index 7dd92d9..f859332 100755
+--- a/bin/genieacs-cwmp
++++ b/bin/genieacs-cwmp
+@@ -4,6 +4,7 @@ var fs = require('fs');
+ 
+ var dir = path.resolve(path.dirname(fs.realpathSync(__filename)), '..');
+ process.chdir(dir);
++process.title = path.basename(__filename);
+ 
+ cluster = require(path.resolve(dir, 'lib/cluster'));
+ cluster.start('cwmp');
+diff --git a/bin/genieacs-fs b/bin/genieacs-fs
+index 5d0253b..1afc8e4 100755
+--- a/bin/genieacs-fs
++++ b/bin/genieacs-fs
+@@ -4,6 +4,7 @@ var fs = require('fs');
+ 
+ var dir = path.resolve(path.dirname(fs.realpathSync(__filename)), '..');
+ process.chdir(dir);
++process.title = path.basename(__filename);
+ 
+ cluster = require(path.resolve(dir, 'lib/cluster'));
+ cluster.start('fs');
+diff --git a/bin/genieacs-nbi b/bin/genieacs-nbi
+index 5069105..d826c8d 100755
+--- a/bin/genieacs-nbi
++++ b/bin/genieacs-nbi
+@@ -4,6 +4,7 @@ var fs = require('fs');
+ 
+ var dir = path.resolve(path.dirname(fs.realpathSync(__filename)), '..');
+ process.chdir(dir);
++process.title = path.basename(__filename);
+ 
+ cluster = require(path.resolve(dir, 'lib/cluster'));
+ cluster.start('nbi');

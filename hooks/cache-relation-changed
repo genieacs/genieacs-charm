@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+host=`relation-get private-address`
+port=`relation-get port`
+
+if [ -z "$host" ] ; then
+    exit 0
+fi
+
+if [ -z "$port" ]; then
+    port=`config-get redis_port`
+fi
+
+export GENIEACS_REDIS_HOST=$host
+export GENIEACS_REDIS_PORT=$port
+
+"$CHARM_DIR/hooks/start"

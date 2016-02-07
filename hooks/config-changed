@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+
+mongodb_host=`config-get mongodb_host`
+mongodb_port=`config-get mongodb_port`
+
+redis_host=`config-get redis_host`
+redis_port=`config-get redis_port`
+
+if [ -n "$mongodb_host" ]; then
+    export GENIEACS_MONGODB_CONNECTION_URL="mongodb://$mongodb_host:$mongodb_port/genieacs"
+fi
+
+if [ -n "$redis_host" ]; then
+    export GENIEACS_REDIS_HOST=$redis_host
+    export GENIEACS_REDIS_PORT=$redis_port
+fi
+
+# Check if repo or branch changed
+cd /opt/genieacs/
+repo=`config-get repo`
+branch=`config-get branch`
+current_repo=`git config --get remote.origin.url`
+if [ "$current_repo" != "$repo" ]; then
+    "$CHARM_DIR/hooks/stop"
+    git remote set-url origin $repo
+    git fetch origin $branch
+    git reset --hard
+    git apply "$CHARM_DIR/services/add_title_to_genieacs_services.diff"
+    npm install
+    npm run compile
+fi
+current_branch=`git rev-parse --abbrev-ref HEAD`
+if [ "$current_branch" != "$branch" ]; then
+    "$CHARM_DIR/hooks/stop"
+    git checkout bin/*
+    git checkout $branch
+    git apply "$CHARM_DIR/services/add_title_to_genieacs_services.diff":
+    npm install
+    npm run compile
+fi
+
+cd $CHARM_DIR
+"$CHARM_DIR/hooks/start"

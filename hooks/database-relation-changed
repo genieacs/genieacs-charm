@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+host=`relation-get private-address`
+port=`relation-get port`
+
+if [ -z "$host" ] ; then
+    exit 0
+fi
+
+if [ -z "$port" ]; then
+    port=`config-get port`
+fi
+
+export GENIEACS_MONGODB_CONNECTION_URL="mongodb://$host:$port/genieacs"
+
+"$CHARM_DIR/hooks/start"

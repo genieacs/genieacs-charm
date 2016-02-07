@@ -1,0 +1,13 @@
+GENIEACS JUJU!
+
+  to deploy genieacs juju
+        $ juju deply genieacs
+
+  to configure genieacs database and cache engine to a remote host
+        $ juju set genieacs mongodb_host='<mongodb-host>' redis_host='<redis-host>'
+
+  or to configure genieacs database and cache engine to a local juju host
+        $ juju deploy mongodb
+        $ juju deploy redis
+        $ juju add-relation mongodb genieacs
+        $ juju add-relation redis:master genieacs

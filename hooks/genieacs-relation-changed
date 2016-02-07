@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+relation-set host=`unit-get private-address` nbi_port="7557" cwmp_port="7547" fs_port="7567"

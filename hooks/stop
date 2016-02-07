@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+juju-log "Shutting Genieacs down"
+service genieacs-cwmp stop
+service genieacs-fs stop
+service genieacs-nbi stop
+
+close-port 7547
+close-port 7557
+close-port 7567
+
