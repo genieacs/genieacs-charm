@@ -1,17 +1,16 @@
 GenieACS Juju Charm
 
-To deploy the charm:
+To deploy genieacs juju
+    $ juju deply cs:~zaidka/trusty/genieacs-0
 
-    $ juju deploy genieacs
-
-To configure genieacs database and cache engine to a remote host:
-
+To configure genieacs database and cache engine to a remote host
     $ juju set genieacs mongodb_host='<mongodb-host>' redis_host='<redis-host>'
 
-Or to configure genieacs database and cache engine to a local juju host:
-
+Or to configure genieacs database and cache engine to a juju environment
     $ juju deploy mongodb
     $ juju deploy redis
     $ juju add-relation mongodb genieacs
     $ juju add-relation redis:master genieacs
 
+To expose genieacs(ports: 7557, 7547, 7567) publicly
+    $ juju expose genieacs
